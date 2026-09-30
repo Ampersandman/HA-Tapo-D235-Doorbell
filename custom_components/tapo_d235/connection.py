@@ -13,6 +13,10 @@ from kasa.deviceconfig import (
 from kasa.exceptions import KasaException
 
 
+class TpapDependencyUnavailable(Exception):
+    """Raised when Home Assistant still has the older python-kasa package."""
+
+
 async def _async_connect_with_transport(
     host: str,
     username: str,
@@ -58,9 +62,13 @@ async def async_connect_d235(
     original AES SmartCam transport; authentication errors are always returned
     unchanged to avoid amplifying the device's lockout protection.
     """
+    tpap_encryption = getattr(DeviceEncryptionType, "Tpap", None)
+    if tpap_encryption is None:
+        raise TpapDependencyUnavailable
+
     try:
         return await _async_connect_with_transport(
-            host, username, password, DeviceEncryptionType.Tpap
+            host, username, password, tpap_encryption
         )
     except KasaException as error:
         if not _is_tpap_discovery_mismatch(error):

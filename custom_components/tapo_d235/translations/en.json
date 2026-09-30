@@ -13,6 +13,7 @@
     },
     "error": {
       "cannot_connect": "Could not reach the doorbell at this address. Check that Home Assistant and the doorbell are on the same network and that the IP address is correct.",
+      "dependency_not_updated": "TPAP support is not installed yet. In HACS, use Redownload for this integration, then fully restart Home Assistant before trying again.",
       "invalid_auth": "The doorbell rejected this TP-Link ID email address or password. Use the account that owns the doorbell in the Tapo app.",
       "unsupported_device": "This host is not a Tapo D235 doorbell.",
       "unknown": "Unexpected error; inspect the Home Assistant log."

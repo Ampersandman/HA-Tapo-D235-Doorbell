@@ -11,5 +11,5 @@
   "requirements": [
     "python-kasa@git+https://github.com/ZeliardM/python-kasa.git@e7084472972f08f2e2235b342f3964aedbfaeb3b"
   ],
-  "version": "0.2.1"
+  "version": "0.2.2"
 }

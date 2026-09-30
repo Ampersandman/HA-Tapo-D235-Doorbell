@@ -25,7 +25,9 @@ implement those APIs in `python-kasa`; they cannot safely be exposed until the l
 ## Install
 
 1. Add this repository as a custom repository in HACS (category: **Integration**) and install it.
-2. Restart Home Assistant.
+2. Restart Home Assistant. When upgrading from a pre-0.2.0 release, choose **Redownload** in HACS
+   first, then perform a full restart (reloading the config entry is not sufficient because the
+   TPAP-enabled `python-kasa` dependency has changed).
 3. Go to **Settings → Devices & services → Add integration** and add **Tapo D235 Doorbell**.
 4. Enter the doorbell's stable IP address, then the **TP-Link ID email address and password** used
    in the Tapo app. Current D235 firmware uses the cloud-account email for its local API; it does
@@ -51,6 +53,11 @@ older AES camera protocol only for devices that do not support TPAP.
 
 Every user-visible code or documentation change must add a new, dated entry here. Newest entries
 go first and state the released integration version and the practical impact.
+
+### 0.2.2 — 2026-09-30
+
+- Detects a retained pre-TPAP `python-kasa` dependency and gives an actionable HACS Redownload and
+  restart instruction instead of an unexpected setup error.
 
 ### 0.2.1 — 2026-09-30
 

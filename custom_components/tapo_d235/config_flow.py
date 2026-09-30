@@ -12,7 +12,7 @@ from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 
-from .connection import async_connect_d235
+from .connection import TpapDependencyUnavailable, async_connect_d235
 from .const import CONF_DEVICE_ID, CONF_STREAM_PASSWORD, CONF_STREAM_USERNAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -50,6 +50,8 @@ class TapoD235ConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 info = await _validate_input(self.hass, user_input)
+            except TpapDependencyUnavailable:
+                errors["base"] = "dependency_not_updated"
             except AuthenticationError:
                 # Do not log the exception text: some device responses can contain
                 # authentication metadata. The type and host are enough to diagnose
