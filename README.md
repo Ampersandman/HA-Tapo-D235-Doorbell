@@ -1,8 +1,9 @@
 # Tapo D235 Doorbell for Home Assistant
 
 A HACS custom integration for the **Tapo D235** video doorbell. It connects locally through
-[`python-kasa`](https://github.com/python-kasa/python-kasa), using the D235 support branch from
-[python-kasa PR #1678](https://github.com/python-kasa/python-kasa/pull/1678).
+[`python-kasa`](https://github.com/python-kasa/python-kasa), combining the D235 support branch
+from [python-kasa PR #1678](https://github.com/python-kasa/python-kasa/pull/1678) with the
+TPAP transport implementation from [python-kasa PR #1592](https://github.com/python-kasa/python-kasa/pull/1592).
 
 ## What it exposes
 
@@ -32,7 +33,9 @@ implement those APIs in `python-kasa`; they cannot safely be exposed until the l
 5. Enable RTSP in the Tapo app if that setting is available and you want the camera entity. If it
    uses credentials different from the TP-Link ID, provide them in the optional fields.
 
-The integration is local-polling (30 seconds) and requires no cloud access after setup.
+The integration is local-polling (30 seconds) and requires no cloud access after setup. It
+negotiates the D235's current TPAP local-control protocol when advertised, falling back to the
+older AES camera protocol only for devices that do not support TPAP.
 
 ## Notes and limitations
 
@@ -41,8 +44,8 @@ The integration is local-polling (30 seconds) and requires no cloud access after
   be available (it is built in) and RTSP must be enabled on the doorbell.
 - This is deliberately a separate `tapo_d235` integration; it does not replace or modify Home
   Assistant's built-in TP-Link integration.
-- The dependency is pinned to the exact PR branch head so that D235 support is reproducible.
-  Update the pin after upstream `python-kasa` support is released and tested.
+- The dependency is pinned to an exact unmerged `python-kasa` commit which combines D235 routing
+  with TPAP support. It must be replaced by a released upstream version after compatibility testing.
 
 ## Development
 

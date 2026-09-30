@@ -9,7 +9,7 @@
   "after_dependencies": ["stream"],
   "integration_type": "device",
   "requirements": [
-    "python-kasa@git+https://github.com/russellfinlay/python-kasa.git@cae26c97a24cf705c379018e29442d115d802924"
+    "python-kasa@git+https://github.com/ZeliardM/python-kasa.git@e7084472972f08f2e2235b342f3964aedbfaeb3b"
   ],
-  "version": "0.1.2"
+  "version": "0.2.0"
 }

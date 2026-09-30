@@ -10,6 +10,41 @@ from kasa.deviceconfig import (
     DeviceEncryptionType,
     DeviceFamily,
 )
+from kasa.exceptions import KasaException
+
+
+async def _async_connect_with_transport(
+    host: str,
+    username: str,
+    password: str,
+    encryption_type: DeviceEncryptionType,
+) -> Any:
+    """Connect to a D235 using one explicitly selected local transport."""
+    config = DeviceConfig(
+        host=host,
+        credentials=Credentials(username=username, password=password),
+        connection_type=DeviceConnectionParameters(
+            device_family=DeviceFamily.SmartTapoDoorbell,
+            encryption_type=encryption_type,
+            https=True,
+            # D235 camera control starts on the camera HTTPS endpoint. A TPAP
+            # device can announce a different control port during its unauthenticated
+            # discovery exchange, which python-kasa then adopts for the session.
+            http_port=443,
+        ),
+    )
+    return await Device.connect(config=config)
+
+
+def _is_tpap_discovery_mismatch(error: KasaException) -> bool:
+    """Return whether a D235 responded but did not advertise TPAP.
+
+    Do not fall back after a TPAP authentication failure: a second login attempt
+    using another protocol can extend a device-side login lockout. The TPAP
+    transport performs an unauthenticated discovery request before it submits
+    credentials, so only that explicit protocol mismatch is safe to fall back.
+    """
+    return "TPAP discover" in str(error)
 
 
 async def async_connect_d235(
@@ -17,17 +52,20 @@ async def async_connect_d235(
 ) -> Any:
     """Connect directly to a D235 without relying on UDP discovery.
 
-    D235 doorbells use the SmartCam HTTPS transport. Providing these connection
-    parameters is required when the device does not answer UDP discovery, which
-    is common on Wi-Fi, VLAN, and multicast-restricted networks.
+    Recent D235 firmware can use TPAP, which is negotiated over the camera HTTPS
+    endpoint and cannot be reached by the older AES-only python-kasa branch.
+    Try TPAP first. Only a confirmed TPAP discovery mismatch falls back to the
+    original AES SmartCam transport; authentication errors are always returned
+    unchanged to avoid amplifying the device's lockout protection.
     """
-    config = DeviceConfig(
-        host=host,
-        credentials=Credentials(username=username, password=password),
-        connection_type=DeviceConnectionParameters(
-            device_family=DeviceFamily.SmartTapoDoorbell,
-            encryption_type=DeviceEncryptionType.Aes,
-            https=True,
-        ),
+    try:
+        return await _async_connect_with_transport(
+            host, username, password, DeviceEncryptionType.Tpap
+        )
+    except KasaException as error:
+        if not _is_tpap_discovery_mismatch(error):
+            raise
+
+    return await _async_connect_with_transport(
+        host, username, password, DeviceEncryptionType.Aes
     )
-    return await Device.connect(config=config)
