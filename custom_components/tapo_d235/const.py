@@ -16,5 +16,6 @@ PLATFORMS: Final = (
 
 CONF_STREAM_USERNAME: Final = "stream_username"
 CONF_STREAM_PASSWORD: Final = "stream_password"
+CONF_DEVICE_ID: Final = "device_id"
 DEFAULT_SCAN_INTERVAL: Final = timedelta(seconds=30)
 

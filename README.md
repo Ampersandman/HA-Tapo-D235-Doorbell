@@ -26,8 +26,11 @@ implement those APIs in `python-kasa`; they cannot safely be exposed until the l
 1. Add this repository as a custom repository in HACS (category: **Integration**) and install it.
 2. Restart Home Assistant.
 3. Go to **Settings → Devices & services → Add integration** and add **Tapo D235 Doorbell**.
-4. Enter the doorbell's stable IP address and its local Tapo Camera Account credentials.
-5. Enable RTSP in the Tapo app if you want the camera entity. If you use a different RTSP Camera
+4. In the Tapo app, enable **Tapo Lab → Third-Party Compatibility**, then create a local **Camera
+   Account** under the D235's **Advanced Settings → Camera Account**. This username is one you
+   create in the app; it is not your TP-Link email address.
+5. Enter the doorbell's stable IP address and those local Camera Account credentials.
+6. Enable RTSP in the Tapo app if you want the camera entity. If you use a different RTSP Camera
    Account, provide it in the optional fields.
 
 The integration is local-polling (30 seconds) and requires no cloud access after setup.

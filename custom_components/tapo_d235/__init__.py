@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from .const import (
+    CONF_DEVICE_ID,
     CONF_STREAM_PASSWORD,
     CONF_STREAM_USERNAME,
     DOMAIN,
@@ -27,6 +28,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: D235ConfigEntry) -> bool
         password=entry.data[CONF_PASSWORD],
         stream_username=entry.options.get(CONF_STREAM_USERNAME),
         stream_password=entry.options.get(CONF_STREAM_PASSWORD),
+        expected_device_id=entry.data.get(CONF_DEVICE_ID),
     )
     try:
         await coordinator.async_config_entry_first_refresh()
