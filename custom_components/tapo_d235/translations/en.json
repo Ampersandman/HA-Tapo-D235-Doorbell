@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Tapo D235 Doorbell",
+        "description": "Enter the doorbell's IP address and its local Tapo Camera Account credentials.",
+        "data": {
+          "host": "Doorbell IP address",
+          "username": "Tapo Camera Account username",
+          "password": "Tapo Camera Account password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect with these details.",
+      "unsupported_device": "This host is not a Tapo D235 doorbell.",
+      "unknown": "Unexpected error; inspect the Home Assistant log."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "RTSP Camera Account",
+        "description": "Only fill these in when RTSP uses a different Camera Account from the one used to connect the doorbell.",
+        "data": {
+          "stream_username": "RTSP username",
+          "stream_password": "RTSP password"
+        }
+      }
+    }
+  }
+}
