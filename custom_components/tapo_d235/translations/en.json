@@ -3,16 +3,17 @@
     "step": {
       "user": {
         "title": "Connect Tapo D235 Doorbell",
-        "description": "Enter the doorbell's IP address and its local Tapo Camera Account credentials.",
+        "description": "Enter the doorbell's IP address and the TP-Link ID used in the Tapo app. The username is an email address.",
         "data": {
           "host": "Doorbell IP address",
-          "username": "Tapo Camera Account username",
-          "password": "Tapo Camera Account password"
+          "username": "TP-Link ID email address",
+          "password": "TP-Link ID password"
         }
       }
     },
     "error": {
-      "cannot_connect": "Could not connect with these details.",
+      "cannot_connect": "Could not reach the doorbell at this address. Check that Home Assistant and the doorbell are on the same network and that the IP address is correct.",
+      "invalid_auth": "The doorbell rejected this TP-Link ID email address or password. Use the account that owns the doorbell in the Tapo app.",
       "unsupported_device": "This host is not a Tapo D235 doorbell.",
       "unknown": "Unexpected error; inspect the Home Assistant log."
     }
@@ -20,8 +21,8 @@
   "options": {
     "step": {
       "init": {
-        "title": "RTSP Camera Account",
-        "description": "Only fill these in when RTSP uses a different Camera Account from the one used to connect the doorbell.",
+        "title": "Optional RTSP credentials",
+        "description": "Only fill these in if RTSP is enabled and uses credentials different from the TP-Link ID used to connect the doorbell.",
         "data": {
           "stream_username": "RTSP username",
           "stream_password": "RTSP password"

@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import logging
+
 import voluptuous as vol
-from kasa.exceptions import KasaException
+from kasa.exceptions import AuthenticationError, KasaException
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME
@@ -13,8 +15,12 @@ from homeassistant.data_entry_flow import FlowResult
 from .connection import async_connect_d235
 from .const import CONF_DEVICE_ID, CONF_STREAM_PASSWORD, CONF_STREAM_USERNAME, DOMAIN
 
+_LOGGER = logging.getLogger(__name__)
 
-async def _validate_input(hass: HomeAssistant, data: dict[str, str]) -> dict[str, str]:
+
+async def _validate_input(
+    _hass: HomeAssistant, data: dict[str, str]
+) -> dict[str, str]:
     """Verify credentials and ensure the selected host identifies as a D235."""
     device = await async_connect_d235(
         data[CONF_HOST], data[CONF_USERNAME], data[CONF_PASSWORD]
@@ -44,11 +50,29 @@ class TapoD235ConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 info = await _validate_input(self.hass, user_input)
-            except (KasaException, OSError, TimeoutError):
+            except AuthenticationError:
+                # Do not log the exception text: some device responses can contain
+                # authentication metadata. The type and host are enough to diagnose
+                # this case without exposing sensitive data.
+                _LOGGER.info(
+                    "D235 rejected credentials for host %s", user_input[CONF_HOST]
+                )
+                errors["base"] = "invalid_auth"
+            except (KasaException, OSError, TimeoutError) as err:
+                _LOGGER.info(
+                    "Could not establish a D235 connection to %s (%s)",
+                    user_input[CONF_HOST],
+                    type(err).__name__,
+                )
                 errors["base"] = "cannot_connect"
             except UnsupportedDevice:
                 errors["base"] = "unsupported_device"
-            except Exception:
+            except Exception as err:
+                _LOGGER.error(
+                    "Unexpected D235 connection error for host %s (%s)",
+                    user_input[CONF_HOST],
+                    type(err).__name__,
+                )
                 errors["base"] = "unknown"
             else:
                 await self.async_set_unique_id(info[CONF_DEVICE_ID])
