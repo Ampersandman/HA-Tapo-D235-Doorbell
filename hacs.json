@@ -1,0 +1,7 @@
+{
+  "name": "Tapo D235 Doorbell",
+  "content_in_root": false,
+  "domains": ["tapo_d235"],
+  "homeassistant": "2025.1.0",
+  "render_readme": true
+}
