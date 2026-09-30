@@ -47,6 +47,38 @@ older AES camera protocol only for devices that do not support TPAP.
 - The dependency is pinned to an exact unmerged `python-kasa` commit which combines D235 routing
   with TPAP support. It must be replaced by a released upstream version after compatibility testing.
 
+## Patch notes
+
+Every user-visible code or documentation change must add a new, dated entry here. Newest entries
+go first and state the released integration version and the practical impact.
+
+### 0.2.1 — 2026-09-30
+
+- Added this maintained Patch notes section and documented all releases to date.
+
+### 0.2.0 — 2026-09-30
+
+- Added TPAP local-control negotiation for newer D235 firmware.
+- Falls back to the older AES camera transport only when the doorbell explicitly does not advertise
+  TPAP, avoiding an unnecessary second authentication attempt after a TPAP login failure.
+- Switched to an exact TPAP-enabled `python-kasa` commit.
+
+### 0.1.2 — 2026-09-30
+
+- Corrected setup guidance and labels to use the TP-Link ID email address and password.
+- Separates credential rejection from doorbell reachability errors without logging secret data.
+
+### 0.1.1 — 2026-09-30
+
+- Replaced UDP-dependent setup with a direct D235 AES/HTTPS connection.
+- Stores the doorbell device ID to prevent a changed IP address from silently targeting another device.
+- Stopped pre-populating the optional RTSP password in the options form.
+
+### 0.1.0 — 2026-09-30
+
+- Initial HACS integration with feature-driven sensor, binary sensor, switch, number, select,
+  button, and RTSP camera entities.
+
 ## Development
 
 The generic entity mapping is in `custom_components/tapo_d235/entity.py`. It maps the library's
